@@ -21,7 +21,8 @@ public class ContaService {
     @Autowired
     private TransferenciaService transferenciaService;
 
-    public Transferencia transferirSaldo(Long numeroContaOrigem, TransferenciaForm transferenciaForm) throws BusinessException {
+    public Transferencia transferirSaldo(Long numeroContaOrigem, TransferenciaForm transferenciaForm)
+            throws BusinessException {
 
 
         Conta contaOrigem = buscarConta(contaRepository,numeroContaOrigem);

@@ -5,15 +5,19 @@ import br.com.desafio.banktech.model.Conta;
 import br.com.desafio.banktech.model.StatusTransferencia;
 import br.com.desafio.banktech.model.Transferencia;
 import br.com.desafio.banktech.repository.TransferenciaRepository;
+import br.com.desafio.banktech.threads.ExecutaTransferenciaThread;
 import br.com.desafio.banktech.validator.transferencia.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static java.lang.Thread.sleep;
 
 @Service
 public class TransferenciaService {
@@ -32,28 +36,19 @@ public class TransferenciaService {
     }
 
     @Transactional
-    public Transferencia transferirSaldoEntreContas(Conta contaOrigem, Conta contaDestino, BigDecimal valor){
+    public Transferencia transferirSaldoEntreContas(Conta contaDebito, Conta contaCredito, BigDecimal valor) {
 
-        Transferencia transferencia = new Transferencia(contaOrigem, contaDestino, valor);
+        Transferencia transferencia = new Transferencia(contaDebito, contaCredito, valor);
 
-        validacoes.forEach(v -> {
-            try {
-                v.validar(transferencia);
-            } catch (BusinessException e) {
-                setFalhaTransferencia(transferencia,e);
-            }
-        });
-
-        if (transferencia.getStatusTransferencia().equals(StatusTransferencia.FALHA)){
+        if(!ehValida(transferencia)){
             return transferenciaRepository.save(transferencia);
         }
 
-        synchronized (this){
-            if(transferencia.executa()){
-                transferenciaRepository.save(transferencia);
-            };
-        }
-        return transferencia;
+        ExecutaTransferenciaThread executor = new ExecutaTransferenciaThread(transferencia);
+
+        executor.start();
+
+        return transferenciaRepository.save(transferencia);
     }
 
     public List<Transferencia> listarTransacoesPorNumeroConta(Long numeroConta){
@@ -66,4 +61,18 @@ public class TransferenciaService {
         transferencia.setDetalhes(e.getMessage());
     }
 
+    private boolean ehValida(Transferencia transferencia){
+        boolean valido=true;
+
+        for (IValidadorTransferencia v : validacoes) {
+            try {
+                v.validar(transferencia);
+            } catch (BusinessException e) {
+                valido = false;
+                setFalhaTransferencia(transferencia, e);
+            }
+        }
+
+        return valido;
+    }
 }

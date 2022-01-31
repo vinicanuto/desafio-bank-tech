@@ -30,7 +30,7 @@ public class ContaController {
     @ResponseBody
     public ResponseEntity<Transferencia> buscarClientePorNumeroConta( @PathVariable("numeroConta") Long numeroConta,
             @RequestBody @Valid TransferenciaForm form)
-            throws BusinessException {
+            throws BusinessException, InterruptedException {
         Transferencia transferencia = contaService.transferirSaldo(numeroConta, form);
 
 

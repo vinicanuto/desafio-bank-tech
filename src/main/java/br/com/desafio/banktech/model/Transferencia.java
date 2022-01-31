@@ -56,18 +56,4 @@ public class Transferencia {
     @NotNull
     private BigDecimal valor;
 
-
-    public synchronized boolean executa(){
-        if(this.statusTransferencia.equals(StatusTransferencia.CRIADA)){
-            if(this.contaOrigem.sacar(valor)) {
-                if(this.contaDestino.depositar(valor)){
-                    this.statusTransferencia = StatusTransferencia.SUCESSO;
-                }
-            }else {
-                this.statusTransferencia = StatusTransferencia.FALHA;
-            }
-            return true;
-        }
-        return false;
-    }
 }

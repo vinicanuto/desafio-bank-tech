@@ -8,10 +8,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-
-@Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "numeroConta"}) })
 public class Conta implements Serializable {
 
@@ -22,25 +21,28 @@ public class Conta implements Serializable {
     @NotNull
     private BigDecimal saldo=BigDecimal.ZERO;
 
-
     public synchronized BigDecimal getSaldo() {
         return saldo;
     }
 
-    public boolean sacar(BigDecimal valor){
-        synchronized (this){
-            if(this.getSaldo().compareTo(valor) < 0)
-                return false;
-            this.saldo = this.getSaldo().subtract(valor);
-            return true;
-        }
+    public synchronized boolean debitar(BigDecimal valor){
+        if(this.getSaldo().compareTo(valor) < 0)
+            return false;
+        this.saldo = this.getSaldo().subtract(valor);
+        return true;
     }
 
-    public boolean depositar(BigDecimal valor){
-        synchronized(this){
-            this.saldo = this.getSaldo().add(valor);
+    public synchronized boolean depositar(BigDecimal valor){
+        this.saldo = this.getSaldo().add(valor);
+        return true;
+    }
+
+    public synchronized boolean transferir(Conta contaDestino, BigDecimal valor){
+        if(debitar(valor)){
+            contaDestino.depositar(valor);
             return true;
         }
+        return false;
     }
 
     @Override

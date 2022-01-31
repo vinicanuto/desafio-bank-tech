@@ -8,6 +8,7 @@ import br.com.desafio.banktech.exception.transferencia.ValorLimiteUltrapassadoEx
 import br.com.desafio.banktech.model.Cliente;
 import br.com.desafio.banktech.model.Conta;
 import br.com.desafio.banktech.model.Transferencia;
+import br.com.desafio.banktech.threads.ExecutaTransferenciaThread;
 import br.com.desafio.banktech.validator.transferencia.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -136,7 +139,7 @@ class TransferenciasTests {
 		BigDecimal valorSaque = new BigDecimal("200.0");
 		BigDecimal valorEsperado = saldoAtual.subtract(valorSaque);
 
-		if(cliente2.getConta().sacar(valorSaque)){
+		if(cliente2.getConta().debitar(valorSaque)){
 			assertEquals(valorEsperado, cliente2.getConta().getSaldo());
 		}
 	}
@@ -147,7 +150,7 @@ class TransferenciasTests {
 		BigDecimal saldoAtual = cliente2.getConta().getSaldo();
 		BigDecimal valorSaque = saldoAtual.add(new BigDecimal("500.0"));
 
-		assertFalse(this.cliente2.getConta().sacar(valorSaque));
+		assertFalse(this.cliente2.getConta().debitar(valorSaque));
 		assertEquals(saldoAtual,cliente2.getConta().getSaldo());
 	}
 
@@ -158,9 +161,47 @@ class TransferenciasTests {
 		BigDecimal valor = saldoAtual.add(new BigDecimal("500.0"));
 
 		cliente2.getConta().depositar(valor);
-		cliente2.getConta().sacar(valor);
+		cliente2.getConta().debitar(valor);
 
 		assertEquals(saldoAtual,cliente2.getConta().getSaldo());
+	}
+
+	@Test
+	public void testaConcorrencia(){
+		Vector<ExecutaTransferenciaThread> threads = new Vector<>();
+
+		Conta c1 = new Conta(55l,new BigDecimal("1000.0"));
+		Conta c2 = new Conta(66l,new BigDecimal("1000.0"));
+
+		Transferencia tf1 = new Transferencia(c1,
+				c2,
+				new BigDecimal("100.0"));
+
+		ExecutaTransferenciaThread et1 = new ExecutaTransferenciaThread(tf1);
+		ExecutaTransferenciaThread et2 = new ExecutaTransferenciaThread(tf1);
+		ExecutaTransferenciaThread et3 = new ExecutaTransferenciaThread(tf1);
+		ExecutaTransferenciaThread et4 = new ExecutaTransferenciaThread(tf1);
+
+		//c1 =1000 - 400 =600
+		//c2 =1000 + 400 =1400
+		Transferencia tf2 = new Transferencia(c2,
+				c1,
+				new BigDecimal("50.0"));
+
+		ExecutaTransferenciaThread et5 = new ExecutaTransferenciaThread(tf2);
+		ExecutaTransferenciaThread et6 = new ExecutaTransferenciaThread(tf2);
+		ExecutaTransferenciaThread et7 = new ExecutaTransferenciaThread(tf2);
+		ExecutaTransferenciaThread et8 = new ExecutaTransferenciaThread(tf2);
+
+		//c1 =600 + 200 =800
+		//c2 =1400 - 200 =1200
+
+		threads.addAll(Arrays.asList(et1,et2,et3,et4,et5,et6,et7,et8));
+
+		threads.forEach(t-> t.start());
+
+		assertEquals(new BigDecimal("800.0"), c1.getSaldo());
+		assertEquals(new BigDecimal("1200.0"), c2.getSaldo());
 	}
 
 

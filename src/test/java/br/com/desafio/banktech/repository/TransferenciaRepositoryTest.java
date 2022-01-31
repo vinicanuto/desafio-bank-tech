@@ -3,6 +3,7 @@ package br.com.desafio.banktech.repository;
 import br.com.desafio.banktech.model.Cliente;
 import br.com.desafio.banktech.model.Conta;
 import br.com.desafio.banktech.model.Transferencia;
+import br.com.desafio.banktech.threads.ExecutaTransferenciaThread;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +37,17 @@ public class TransferenciaRepositoryTest {
                 cliente2.getConta(),
                 new BigDecimal("100.0"));
 
-        transferencia1.executa();
+        ExecutaTransferenciaThread executaTransferenciaThread = new ExecutaTransferenciaThread(transferencia1);
+        executaTransferenciaThread.start();
 
         transferenciaRepository.save(transferencia1);
 
         Transferencia transferencia2 = new Transferencia(cliente1.getConta(),
                 cliente2.getConta(),
                 new BigDecimal("150.0"));
+
+        ExecutaTransferenciaThread executaTransferenciaThread2 = new ExecutaTransferenciaThread(transferencia1);
+        executaTransferenciaThread2.start();
 
         transferenciaRepository.save(transferencia2);
     }
