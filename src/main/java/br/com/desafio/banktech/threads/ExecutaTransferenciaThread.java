@@ -12,7 +12,7 @@ public class ExecutaTransferenciaThread extends AbstractMovimentacao {
 
     private Transferencia transferencia;
 
-    public ExecutaTransferenciaThread(Transferencia tf){
+    public ExecutaTransferenciaThread(final Transferencia tf){
         super(tf.getContaDebito().getNumeroConta().toString());
         this.transferencia=tf;
         super.valor=transferencia.getValor();

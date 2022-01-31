@@ -55,7 +55,7 @@ public class TransferenciaRepositoryTest {
     @Test
     public void deveListarTransferenciasPorDataDecrescente(){
         List<Transferencia> transferenciaList = transferenciaRepository
-                .findAllByContaOrigemNumeroContaOrderByDataCriacaoDesc(55l);
+                .findAllByContaDebitoNumeroContaOrderByDataCriacaoDesc(55l);
 
         assertEquals(2, transferenciaList.size());
         assertEquals(new BigDecimal("150.0"), transferenciaList.get(0).getValor());
