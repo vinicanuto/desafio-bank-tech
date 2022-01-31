@@ -28,7 +28,7 @@ Construir uma API REST (JSON) que atenda os requistos
 - Maven
 
 
-##Instruções
+## Instruções
 
 Por padrão a aplicação utiliza a porta 8080.
 
@@ -41,14 +41,14 @@ ou rode um **`mvn install`**
 `java -jar bank-tech-0.0.1-SNAPSHOT.jar -Dserver.port=**PORTA_AQUI**`
 
 
-##Open API
+## Open API
 A aplicação usa o Swagger a fim de documentar os endpoints e sua utilização.
 Para acessar a documentação acesse via browser: `http://<HOST>:<PORTA>/swagger-ui/`
 
 Endereço padrão: **http://localhost:8080/swagger-ui/**
 
 
-##Docker
+## Docker
 É possível rodar esta aplicação em um container. Para isto abra o terminal na raíz do projeto
 e rode os comandos:
 1. `docker build -t bank-tech`
