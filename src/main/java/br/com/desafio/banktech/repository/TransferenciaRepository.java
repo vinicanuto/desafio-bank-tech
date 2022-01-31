@@ -13,5 +13,5 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, Lo
      * @param contaDebito
      * @return List<Transferencia>
      */
-    List<Transferencia> findAllByContaOrigemNumeroContaOrderByDataCriacaoDesc(Long contaDebito);
+    List<Transferencia> findAllByContaDebitoNumeroContaOrderByDataCriacaoDesc(Long contaDebito);
 }
