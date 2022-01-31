@@ -84,7 +84,7 @@ public class TransferenciaServiceTest {
 
         assertEquals(StatusTransferencia.SUCESSO,transferencia.getStatusTransferencia());
         assertEquals(new BigDecimal("800.0"),transferencia.getValor());
-        assertEquals(clienteOrigem.get().getConta(),transferencia.getContaOrigem());
-        assertEquals(clienteDestino.get().getConta(),transferencia.getContaDestino());
+        assertEquals(clienteOrigem.get().getConta(),transferencia.getContaDebito());
+        assertEquals(clienteDestino.get().getConta(),transferencia.getContaCredito());
     }
 }

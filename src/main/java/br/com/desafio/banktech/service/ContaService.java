@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * @author vi.santos
+ */
 @Service
 public class ContaService {
 
@@ -21,11 +24,19 @@ public class ContaService {
     @Autowired
     private TransferenciaService transferenciaService;
 
-    public Transferencia transferirSaldo(Long numeroContaOrigem, TransferenciaForm transferenciaForm)
+
+    /**
+     * Dado conta para débito, conta para crédito, realiza transferencia
+     * @param numeroContaDebito
+     * @param transferenciaForm
+     * @return Transferencia
+     * @throws BusinessException
+     */
+    public Transferencia transferirSaldo(Long numeroContaDebito, TransferenciaForm transferenciaForm)
             throws BusinessException {
 
 
-        Conta contaOrigem = buscarConta(contaRepository,numeroContaOrigem);
+        Conta contaOrigem = buscarConta(contaRepository,numeroContaDebito);
 
         Conta contaDestino = buscarConta(contaRepository, transferenciaForm.getNumeroContaDestino());
 
@@ -40,6 +51,12 @@ public class ContaService {
         return resultado;
     }
 
+    /**
+     * Busca conta por numero
+     * @param repository
+     * @param numeroConta
+     * @return Conta
+     */
     private static Conta buscarConta(ContaRepository repository, Long numeroConta){
         Optional<Conta> contaOrigem = repository.findById(numeroConta);
         if(contaOrigem.isPresent()){

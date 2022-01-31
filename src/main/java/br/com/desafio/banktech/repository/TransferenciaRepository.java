@@ -7,5 +7,11 @@ import java.util.List;
 
 public interface TransferenciaRepository extends JpaRepository<Transferencia, Long> {
 
-    List<Transferencia> findAllByContaOrigemNumeroContaOrderByDataCriacaoDesc(Long contaOrigem);
+
+    /**
+     * Dado numero de conta retorna lista de transações ordenada por data de criação decrescente
+     * @param contaDebito
+     * @return List<Transferencia>
+     */
+    List<Transferencia> findAllByContaOrigemNumeroContaOrderByDataCriacaoDesc(Long contaDebito);
 }

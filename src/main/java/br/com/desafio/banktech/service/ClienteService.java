@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * @author vi.santos
+ */
 @Service
 public class ClienteService {
 
@@ -23,14 +27,32 @@ public class ClienteService {
     @Autowired
     private ContaRepository contaRepository;
 
+
+    /**
+     * Lista todos clientes
+     * @return List<ClientDTO>
+     */
     public List<ClienteDTO> listarTodos(){
         return ClienteDTO.converteListaCliente(clienteRepository.findAll());
     }
 
+
+    /**
+     * Dado um numero de de conta retorna o cliente
+     * @param numeroConta
+     * @return Optional<Cliente>
+     */
     public Optional<Cliente> buscarPorNumeroConta(Long numeroConta) {
         return  clienteRepository.findByContaNumeroConta(numeroConta);
     }
 
+
+    /**
+     * Cadastra cliente
+     * @param cliente
+     * @return
+     * @throws NumeroDeContaJaCadastradoException
+     */
     public Cliente cadastrar(Cliente cliente) throws NumeroDeContaJaCadastradoException {
         Optional<Conta> conta = contaRepository.findById(cliente.getConta().getNumeroConta());
         if(conta.isPresent())

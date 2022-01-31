@@ -15,6 +15,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
+/**
+ * @author vi.santos
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/")
 public class ContaController {

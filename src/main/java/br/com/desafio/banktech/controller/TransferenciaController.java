@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * @author vi.santos
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api")
 public class TransferenciaController {
@@ -24,7 +28,8 @@ public class TransferenciaController {
 
     @GetMapping(V1_URL)
     @ResponseBody
-    public ResponseEntity<List<TransferenciaDTO>> listarTransferencias(@RequestParam("numeroConta") Long numeroConta){
+    public ResponseEntity<List<TransferenciaDTO>> listarTransferencias(@RequestParam("numeroConta")
+                                                                           @NotNull Long numeroConta){
         List<Transferencia> transferencias =  transferenciaService.listarTransacoesPorNumeroConta(numeroConta);
         return ResponseEntity.ok(TransferenciaDTO.converteLista(transferencias));
     }

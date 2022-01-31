@@ -9,5 +9,10 @@ import java.util.Optional;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
+    /**
+     * Dado numero de conta retorna o Cliente titular
+     * @param numeroConta
+     * @return Optional<Cliente>
+     */
     Optional<Cliente> findByContaNumeroConta(Long numeroConta);
 }

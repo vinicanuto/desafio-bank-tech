@@ -15,14 +15,14 @@ import java.util.Objects;
 @NoArgsConstructor
 public class Transferencia {
 
-    public Transferencia(Conta contaOrigem, Conta contaDestino, BigDecimal valor){
+    public Transferencia(Conta contaDebito, Conta contaCredito, BigDecimal valor){
 
-        Objects.requireNonNull(contaOrigem,"Conta de origem não pode ser nula");
-        Objects.requireNonNull(contaDestino,"Conta de destino não pode ser nula");
+        Objects.requireNonNull(contaDebito,"Conta de debito não pode ser nula");
+        Objects.requireNonNull(contaCredito,"Conta de credito não pode ser nula");
         Objects.requireNonNull(valor, "Valor da transferência é mandatório");
 
-        this.contaOrigem=contaOrigem;
-        this.contaDestino=contaDestino;
+        this.contaDebito=contaDebito;
+        this.contaCredito=contaCredito;
         this.valor=valor;
         this.statusTransferencia = StatusTransferencia.CRIADA;
         this.dataCriacao =Calendar.getInstance();
@@ -36,12 +36,12 @@ public class Transferencia {
     @NotNull
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private Conta contaOrigem;
+    private Conta contaDebito;
 
     @NotNull
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private Conta contaDestino;
+    private Conta contaCredito;
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)

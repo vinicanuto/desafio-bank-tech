@@ -1,7 +1,6 @@
 package br.com.desafio.banktech.dto;
 
 import br.com.desafio.banktech.model.Transferencia;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,8 +37,8 @@ public class TransferenciaDTO implements Serializable {
         this.status =transferencia.getStatusTransferencia().toString();
         this.detalhes =transferencia.getDetalhes();
         this.valor =transferencia.getValor();
-        this.contaOrigem=transferencia.getContaOrigem().getNumeroConta();
-        this.contaDestino=transferencia.getContaDestino().getNumeroConta();
+        this.contaOrigem=transferencia.getContaDebito().getNumeroConta();
+        this.contaDestino=transferencia.getContaCredito().getNumeroConta();
     }
 
     public static final List<TransferenciaDTO> converteLista(List<Transferencia> transferencias){

@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Thread.sleep;
 
+/**
+ * @author vi.santos
+ */
 @Service
 public class TransferenciaService {
 
@@ -35,6 +36,13 @@ public class TransferenciaService {
         validacoes.add(new ValidaValorMaiorQueZero());
     }
 
+    /**
+     * Realiza operação de transferência entre conta para débito e conta crédito
+     * @param contaDebito
+     * @param contaCredito
+     * @param valor
+     * @return Transferencia
+     */
     @Transactional
     public Transferencia transferirSaldoEntreContas(Conta contaDebito, Conta contaCredito, BigDecimal valor) {
 
@@ -51,16 +59,34 @@ public class TransferenciaService {
         return transferenciaRepository.save(transferencia);
     }
 
+
+    /**
+     * Dado um número de conta, lista suas transações por ordem de data decrescente
+     * @param numeroConta
+     * @return List<Transferencia>
+     */
     public List<Transferencia> listarTransacoesPorNumeroConta(Long numeroConta){
         return transferenciaRepository
                 .findAllByContaOrigemNumeroContaOrderByDataCriacaoDesc(numeroConta);
     }
 
+
+    /**
+     * Seta status e detalhes da falha de validação
+     * @param transferencia
+     * @param e
+     */
     private void setFalhaTransferencia(final  Transferencia transferencia, BusinessException e){
         transferencia.setStatusTransferencia(StatusTransferencia.FALHA);
         transferencia.setDetalhes(e.getMessage());
     }
 
+
+    /**
+     * Itera sobre as validacoes e valida a transferencia
+     * @param transferencia
+     * @return boolean
+     */
     private boolean ehValida(Transferencia transferencia){
         boolean valido=true;
 
