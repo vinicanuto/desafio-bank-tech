@@ -67,7 +67,7 @@ public class TransferenciaService {
      */
     public List<Transferencia> listarTransacoesPorNumeroConta(Long numeroConta){
         return transferenciaRepository
-                .findAllByContaOrigemNumeroContaOrderByDataCriacaoDesc(numeroConta);
+                .findAllByContaDebitoNumeroContaOrderByDataCriacaoDesc(numeroConta);
     }
 
 
